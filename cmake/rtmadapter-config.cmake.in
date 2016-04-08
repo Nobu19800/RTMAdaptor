@@ -1,0 +1,54 @@
+# RTMAdapter CMake config file
+#
+# This file sets the following variables:
+# RTMAdapter_FOUND - Always TRUE.
+# RTMAdapter_INCLUDE_DIRS - Directories containing the RTMAdapter include files.
+# RTMAdapter_IDL_DIRS - Directories containing the RTMAdapter IDL files.
+# RTMAdapter_LIBRARIES - Libraries needed to use RTMAdapter.
+# RTMAdapter_DEFINITIONS - Compiler flags for RTMAdapter.
+# RTMAdapter_VERSION - The version of RTMAdapter found.
+# RTMAdapter_VERSION_MAJOR - The major version of RTMAdapter found.
+# RTMAdapter_VERSION_MINOR - The minor version of RTMAdapter found.
+# RTMAdapter_VERSION_REVISION - The revision version of RTMAdapter found.
+# RTMAdapter_VERSION_CANDIDATE - The candidate version of RTMAdapter found.
+
+message(STATUS "Found RTMAdapter-@PROJECT_VERSION@")
+set(RTMAdapter_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(RTMAdapter_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(RTMAdapter_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(RTMAdapter_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(RTMAdapter_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(RTMAdapter_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(RTMAdapter_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(RTMAdapter_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(RTMAdapter_VERSION @PROJECT_VERSION@)
+set(RTMAdapter_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(RTMAdapter_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(RTMAdapter_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(RTMAdapter_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
