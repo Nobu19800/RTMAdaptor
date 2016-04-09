@@ -74,6 +74,8 @@ endif(BUILD_IDL)
 add_subdirectory(include)
 MAP_ADD_STR(headers  "include/" comp_hdrs)
 add_subdirectory(src)
+add_subdirectory(ports)
+
 
 #if(BUILD_TESTS)
 #    add_subdirectory(test)

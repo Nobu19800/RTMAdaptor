@@ -14,6 +14,10 @@
 // #include "RTMAdapter.h"
 #include "rtm_adapter.h"
 
+#include "ports/timedlong.h"
+#include "ports/timeddoubleseq.h"
+
+size_t Ports_size();
 /*
 void MyModuleInit(RTC::Manager* manager)
 {
@@ -79,7 +83,26 @@ int main (int argc, char** argv)
   Manager_init(m, argc, argv);
   Manager_setRTMAdapterModuleInitProc(m);
   Manager_activateManager(m);
+
+  RTC_t r = Manager_createComponent(m, "RTMAdapter");
+  TimedLong_registerDataType(Port_getBuffer());
+  std::cout << "Register" << std::endl;
+  DataType_t t = TimedLong_create();
+  std::cout << "create" << std::endl;
+  Port_t p = InPort_TimedLong_create("in", t);
+  std::cout << "Port create" << std::endl;
+  if (p < 0) {
+    std::cout << "Failed to create port." << std::endl;
+  }
+  int ret;
+  if ((ret = RTC_addInPort(r, "in", p)) < 0) {
+    std::cout << "Failed to addPort (" << ret << ")" << std::endl;
+  }
+  
   Manager_runManager(m, 0);
+
+
+
   //RTC::Manager* manager;
   //manager = RTC::Manager::init(argc, argv);
 

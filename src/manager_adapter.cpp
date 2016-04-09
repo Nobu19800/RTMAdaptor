@@ -1,3 +1,5 @@
+#include <vector>
+#include <memory>
 
 #include <rtm/Manager.h>
 #include "manager_adapter.h"
@@ -7,11 +9,10 @@
 static RTC::Manager* _manager;
 
 
-RTC::RtcBase* __rtcs[MAX_RTC];
-uint32_t __rtcs_counter = 0;
+std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
+std::vector<std::shared_ptr<RTC::PortBase> > __ports;
 
-RTC::PortBase* __ports[MAX_PORT];
-uint32_t __ports_counter = 0;
+
 
 void MyModuleInit(RTC::Manager* manager)
 {
@@ -116,10 +117,13 @@ RTC_t Manager_createComponent(Manager_t m, char* identifier) {
     return RTC_INVALID_ID;
   }
 
-  __rtcs[__rtcs_counter] = comp;
-  uint32_t ret = __rtcs_counter;
-  __rtcs_counter++;
-  return ret;
+  __rtcs.push_back(std::shared_ptr<RTC::RtcBase>(comp));
+  return __rtcs.size()-1;
 }
 
-
+Result_t Manager_shutdown(Manager_t m) {
+  MANAGER_ARG_CHECK;
+  
+  _manager->shutdown();
+  return OK;
+}
