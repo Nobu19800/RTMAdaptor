@@ -17,7 +17,6 @@
 #include "ports/timedlong.h"
 #include "ports/timeddoubleseq.h"
 
-size_t Ports_size();
 /*
 void MyModuleInit(RTC::Manager* manager)
 {
@@ -76,6 +75,28 @@ void MyModuleInit(RTC::Manager* manager)
   return;
 }
 */
+
+
+static RTC_t rtc;
+static Port_t inIn;
+static DataType_t in;
+
+int on_execute(int ec_id) {
+	int32_t result;
+	InPort_TimedLong_isNew(inIn, &result);
+	if (result) {
+		InPort_read(inIn, &result);
+
+		uint32_t sec, nsec;
+		int32_t data;
+		TimedLong_get(in, &sec, &nsec, &data);
+
+		std::cout << "Received Data is " << data << std::endl;
+	}
+
+	return 0;
+}
+
 int main (int argc, char** argv)
 {
 
@@ -84,20 +105,22 @@ int main (int argc, char** argv)
   Manager_setRTMAdapterModuleInitProc(m);
   Manager_activateManager(m);
 
-  RTC_t r = Manager_createComponent(m, "RTMAdapter");
+  rtc = Manager_createComponent(m, "RTMAdapter");
   TimedLong_registerDataType(Port_getBuffer());
   std::cout << "Register" << std::endl;
-  DataType_t t = TimedLong_create();
+  in = TimedLong_create();
   std::cout << "create" << std::endl;
-  Port_t p = InPort_TimedLong_create("in", t);
+  inIn = InPort_TimedLong_create("in", in);
   std::cout << "Port create" << std::endl;
-  if (p < 0) {
+  if (inIn < 0) {
     std::cout << "Failed to create port." << std::endl;
   }
   int ret;
-  if ((ret = RTC_addInPort(r, "in", p)) < 0) {
+  if ((ret = RTC_addInPort(rtc, "in", inIn)) < 0) {
     std::cout << "Failed to addPort (" << ret << ")" << std::endl;
   }
+
+  RTC_onExecute_listen(rtc, on_execute);
   
   Manager_runManager(m, 0);
 

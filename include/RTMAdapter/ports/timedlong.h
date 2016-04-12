@@ -9,8 +9,8 @@ extern "C" {
 
   ADAPTER_API DataType_t TimedLong_create();
 
-  ADAPTER_API Result_t TimedLong_set(DataType_t d, uint32_t sec, uint32_t usec, long data);
-  ADAPTER_API Result_t TimedLong_get(DataType_t d, uint32_t* sec, uint32_t* usec, long* data);
+  ADAPTER_API Result_t TimedLong_set(DataType_t d, uint32_t sec, uint32_t nsec, int32_t data);
+  ADAPTER_API Result_t TimedLong_get(DataType_t d, uint32_t* sec, uint32_t* nsec, int32_t* data);
 
   ADAPTER_API Port_t InPort_TimedLong_create(char* name, DataType_t d);
 

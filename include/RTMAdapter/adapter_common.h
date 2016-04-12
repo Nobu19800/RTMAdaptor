@@ -3,7 +3,11 @@
 #include <stdint.h>
 
 #ifdef WIN32
-
+#ifdef RTMAdapter_EXPORTS
+#define ADAPTER_API __declspec(dllexport)
+#else
+#define ADAPTER_API __declspec(dllimport)
+#endif
 
 #else
 #define ADAPTER_API
@@ -32,11 +36,11 @@ extern "C" {
   static const DataType_t DATATYPE_INVALID_ID = -4;
 
   enum Result_t {
-    ERROR = -1,
-    INVALID_RTC = -2,
-    INVALID_PORT = -3,
-    INVALID_DATA = -4,
-    OK = 0,
+    RESULT_ERROR = -1,
+	RESULT_INVALID_RTC = -2,
+	RESULT_INVALID_PORT = -3,
+	RESULT_INVALID_DATA = -4,
+	RESULT_OK = 0,
   };
 
 

@@ -1,4 +1,4 @@
-set(port_srcs timedlong.cpp timeddoubleseq.cpp)
+set(port_srcs timedlong.cpp timeddoubleseq.cpp cameraimage.cpp)
 
 if (DEFINED OPENRTM_INCLUDE_DIRS)
   string(REGEX REPLACE "-I" ";"
@@ -40,7 +40,7 @@ add_library(${PROJECT_NAME}_port ${LIB_TYPE} ${port_srcs}
 set_target_properties(${PROJECT_NAME}_port PROPERTIES PREFIX "")
 set_source_files_properties(${ALL_IDL_SRCS} PROPERTIES GENERATED 1)
 add_dependencies(${PROJECT_NAME}_port ALL_IDL_TGT ${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME}_port ${OPENRTM_LIBRARIES} ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}_port ${OPENRTM_LIBRARIES} )
 
 install(TARGETS ${PROJECT_NAME}_port
     EXPORT ${PROJECT_NAME}_port

@@ -38,6 +38,8 @@ RTMAdapter::RTMAdapter(RTC::Manager* manager)
 
     // </rtc-template>
 {
+
+	init_callbacks();
 }
 
 /*!
@@ -95,40 +97,36 @@ RTC::ReturnCode_t RTMAdapter::onShutdown(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t RTMAdapter::onActivated(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+	return on_activated_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
 }
 
 
 RTC::ReturnCode_t RTMAdapter::onDeactivated(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+	return on_deactivated_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
 }
 
 
 RTC::ReturnCode_t RTMAdapter::onExecute(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+	return on_execute_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
 }
 
 
 RTC::ReturnCode_t RTMAdapter::onAborting(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+	return on_aborting_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
 }
 
-/*
 RTC::ReturnCode_t RTMAdapter::onError(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+	return on_error_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
 }
-*/
 
-/*
 RTC::ReturnCode_t RTMAdapter::onReset(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+	return on_reset_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
 }
-*/
 
 /*
 RTC::ReturnCode_t RTMAdapter::onStateUpdate(RTC::UniqueId ec_id)
@@ -159,4 +157,7 @@ extern "C"
   
 };
 
+int do_nothing_callback(int id) {
+	return 0;
+}
 

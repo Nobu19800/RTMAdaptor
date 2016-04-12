@@ -29,6 +29,8 @@
 
 // </rtc-template>
 
+int do_nothing_callback(int id);
+
 using namespace RTC;
 
 /*!
@@ -170,7 +172,7 @@ class RTMAdapter
    * 
    * 
    */
-  // virtual RTC::ReturnCode_t onError(RTC::UniqueId ec_id);
+   virtual RTC::ReturnCode_t onError(RTC::UniqueId ec_id);
 
   /***
    *
@@ -183,7 +185,7 @@ class RTMAdapter
    * 
    * 
    */
-  // virtual RTC::ReturnCode_t onReset(RTC::UniqueId ec_id);
+   virtual RTC::ReturnCode_t onReset(RTC::UniqueId ec_id);
   
   /***
    *
@@ -256,10 +258,51 @@ class RTMAdapter
   // <rtc-template block="private_attribute">
   
   // </rtc-template>
-
+	 
   // <rtc-template block="private_operation">
   
   // </rtc-template>
+
+	 int(*on_activated_callback)(int);
+	 int(*on_deactivated_callback)(int);
+	 int(*on_execute_callback)(int);
+	 int(*on_aborting_callback)(int);
+	 int(*on_error_callback)(int);
+	 int(*on_reset_callback)(int);
+
+	 void init_callbacks() {
+		 on_activated_callback = do_nothing_callback;
+		 on_deactivated_callback = do_nothing_callback;
+		 on_execute_callback = do_nothing_callback;
+		 on_aborting_callback = do_nothing_callback;
+		 on_error_callback = do_nothing_callback;
+		 on_reset_callback = do_nothing_callback;
+	 }
+
+ public:
+	 void onActivated_listen(int(*callback)(int)) {
+		 on_activated_callback = callback;
+	 }
+
+	 void onDeactivated_listen(int(*callback)(int)) {
+		 on_deactivated_callback = callback;
+	 }
+
+	 void onExecute_listen(int(*callback)(int)) {
+		 on_execute_callback = callback;
+	 }
+
+	 void onAborting_listen(int(*callback)(int)) {
+		 on_aborting_callback = callback;
+	 }
+
+	 void onError_listen(int(*callback)(int)) {
+		 on_error_callback = callback;
+	 }
+
+	 void onReset_listen(int(*callback)(int)) {
+		 on_reset_callback = callback;
+	 }
 
 };
 

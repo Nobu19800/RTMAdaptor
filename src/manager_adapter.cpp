@@ -72,7 +72,7 @@ void MyModuleInit(RTC::Manager* manager)
 
 
 #define MANAGER_ARG_CHECK do {if (m < 0) { \
-    return ERROR;\
+    return RESULT_ERROR;\
   }\
 }while(false)
 
@@ -85,28 +85,28 @@ Result_t Manager_init(Manager_t m, int argc, char** argv) {
   MANAGER_ARG_CHECK;
 
   _manager->init(argc, argv);
-  return OK;
+  return RESULT_OK;
 }
 
 Result_t Manager_setRTMAdapterModuleInitProc(Manager_t m) {
   MANAGER_ARG_CHECK;
 
   _manager->setModuleInitProc(MyModuleInit);
-  return OK;
+  return RESULT_OK;
 }
 
 Result_t Manager_activateManager(Manager_t m) {
   MANAGER_ARG_CHECK;
 
   _manager->activateManager();
-  return OK;
+  return RESULT_OK;
 }
 
 Result_t Manager_runManager(Manager_t m, int32_t flag) {
   MANAGER_ARG_CHECK;
   
   _manager->runManager(flag == 0 ? false : true);
-  return OK;
+  return RESULT_OK;
 }
 
 RTC_t Manager_createComponent(Manager_t m, char* identifier) {
@@ -121,9 +121,46 @@ RTC_t Manager_createComponent(Manager_t m, char* identifier) {
   return __rtcs.size()-1;
 }
 
+RTC_t Manager_createAdapterComponent(Manager_t m) {
+	MANAGER_ARG_CHECK;
+
+	RTC::RtcBase* comp = _manager->createComponent("RTMAdapter");
+	if (comp == NULL) {
+		return RTC_INVALID_ID;
+	}
+
+	__rtcs.push_back(std::shared_ptr<RTC::RtcBase>(comp));
+	return __rtcs.size() - 1;
+}
+
+
 Result_t Manager_shutdown(Manager_t m) {
   MANAGER_ARG_CHECK;
   
   _manager->shutdown();
-  return OK;
+  return RESULT_OK;
+}
+
+Result_t Manager_deleteComponent(Manager_t m, RTC_t rtc) {
+	MANAGER_ARG_CHECK;
+	if (rtc < 0 || rtc >= __rtcs.size()) {
+		return RESULT_INVALID_RTC;
+	}
+
+	_manager->deleteComponent(__rtcs[rtc].get());
+	return RESULT_OK;
+}
+
+Result_t Manager_getComponent(Manager_t m, char* instance_name, RTC_t* rtc) {
+	MANAGER_ARG_CHECK;
+
+	for (uint32_t i = 0; i < __rtcs.size(); i++) {
+		if (__rtcs[i] != nullptr) {
+			if (strcmp(__rtcs[i]->getInstanceName(), instance_name) == 0) {
+				*rtc = i;
+				return RESULT_OK;
+			}
+		}
+	}
+	return RESULT_ERROR;
 }

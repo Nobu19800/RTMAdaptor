@@ -21,6 +21,11 @@ extern "C" {
 
   ADAPTER_API Result_t Manager_shutdown(Manager_t m);
 
+  ADAPTER_API Result_t Manager_deleteComponent(Manager_t m, RTC_t rtc);
+
+  ADAPTER_API Result_t Manager_getComponent(Manager_t m, char* instance_name, RTC_t* rtc);
+
+
 #ifdef __cplusplus
 }
 #endif

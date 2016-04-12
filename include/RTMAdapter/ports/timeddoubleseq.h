@@ -12,7 +12,10 @@ extern "C" {
   ADAPTER_API DataType_t TimedDoubleSeq_create();
 
   ADAPTER_API Result_t TimedDoubleSeq_set(DataType_t d, uint32_t sec, uint32_t usec, double* data, uint32_t size);
-  ADAPTER_API Result_t TimedDoubleSeq_get(DataType_t d, uint32_t* sec, uint32_t* usec, double* data, uint32_t max_size);
+
+  ADAPTER_API Result_t TimedDoubleSeq_data_Length(DataType_t d, uint32_t* size);
+
+  ADAPTER_API Result_t TimedDoubleSeq_get(DataType_t d, uint32_t* sec, uint32_t* usec, double* data, uint32_t *size);
 
   ADAPTER_API Port_t InPort_TimedDoubleSeq_create(char* name, DataType_t d);
 
