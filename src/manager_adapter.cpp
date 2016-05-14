@@ -9,7 +9,8 @@
 static RTC::Manager* _manager;
 
 
-std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
+//std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
+std::vector<RTC::RtcBase*> __rtcs;
 std::vector<std::shared_ptr<RTC::PortBase> > __ports;
 
 
@@ -116,8 +117,8 @@ RTC_t Manager_createComponent(Manager_t m, char* identifier) {
   if (comp == NULL) {
     return RTC_INVALID_ID;
   }
-
-  __rtcs.push_back(std::shared_ptr<RTC::RtcBase>(comp));
+  __rtcs.push_back(comp);
+  //__rtcs.push_back(std::shared_ptr<RTC::RtcBase>(comp));
   return __rtcs.size()-1;
 }
 
@@ -128,15 +129,15 @@ RTC_t Manager_createAdapterComponent(Manager_t m) {
 	if (comp == NULL) {
 		return RTC_INVALID_ID;
 	}
-
-	__rtcs.push_back(std::shared_ptr<RTC::RtcBase>(comp));
+	__rtcs.push_back(comp);
+	//__rtcs.push_back(std::shared_ptr<RTC::RtcBase>(comp));
 	return __rtcs.size() - 1;
 }
 
 
 Result_t Manager_shutdown(Manager_t m) {
   MANAGER_ARG_CHECK;
-  
+  //_manager->terminate();
   _manager->shutdown();
   return RESULT_OK;
 }
@@ -146,8 +147,8 @@ Result_t Manager_deleteComponent(Manager_t m, RTC_t rtc) {
 	if (rtc < 0 || rtc >= __rtcs.size()) {
 		return RESULT_INVALID_RTC;
 	}
-
-	_manager->deleteComponent(__rtcs[rtc].get());
+	_manager->deleteComponent(__rtcs[rtc]);
+//	_manager->deleteComponent(__rtcs[rtc].get());
 	return RESULT_OK;
 }
 
