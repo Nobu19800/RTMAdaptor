@@ -11,7 +11,8 @@
 
 // Module specification
 // <rtc-template block="module_spec">
-static const char* rtmadapter_spec[] =
+#define SPEC_MAX_NUM 64
+char* rtmadapter_spec[SPEC_MAX_NUM] =
   {
     "implementation_id", "RTMAdapter",
     "type_name",         "RTMAdapter",
@@ -24,9 +25,28 @@ static const char* rtmadapter_spec[] =
     "max_instance",      "1",
     "language",          "C++",
     "lang_type",         "compile",
-    ""
+    "",
   };
 // </rtc-template>
+
+std::map<std::string, std::string> specMap;
+
+void init_default_spec_map() {
+  std::cout << "init_default_spec_map" << std::endl;
+  for(int i = 0;i < SPEC_MAX_NUM;i+=2) {
+    std::string key = rtmadapter_spec[i];
+
+
+
+    if (key.length() == 0) {
+      break;
+    }
+
+    std::string value = rtmadapter_spec[i+1];
+    std::cout << "map[" << key << "] = " << value << std::endl;
+    specMap[key] = value;
+  }
+}
 
 /*!
  * @brief constructor
@@ -149,7 +169,9 @@ extern "C"
  
   void RTMAdapterInit(RTC::Manager* manager)
   {
-    coil::Properties profile(rtmadapter_spec);
+    //coil::Properties profile(rtmadapter_spec);
+    init_default_spec_map();
+    coil::Properties profile(specMap);
     manager->registerFactory(profile,
                              RTC::Create<RTMAdapter>,
                              RTC::Delete<RTMAdapter>);

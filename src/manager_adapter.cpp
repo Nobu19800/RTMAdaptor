@@ -12,8 +12,41 @@ static RTC::Manager* _manager;
 //std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
 std::vector<RTC::RtcBase*> __rtcs;
 std::vector<std::shared_ptr<RTC::PortBase> > __ports;
+#define SPEC_MAX_STR 64
+#define SPEC_MAX_NUM 24
+static char spec_memory[SPEC_MAX_NUM][SPEC_MAX_STR];
+static int spec_counter;
+static char* end_str = "";
+extern char* rtmadapter_spec[];
 
+bool set_spec(const char* key, const char* value) {
+  if (strlen(value) >= SPEC_MAX_STR) {
+    std::cerr << "[RTMAdapter] Spec String Must Be Shorter than " << SPEC_MAX_STR << "." << std::endl;
+    return false;
+  } 
+  if (spec_counter == SPEC_MAX_NUM) {
+    std::cerr << "[RTMAdapter] Spec can not change any more." << std::endl;
+    return false;
+  }
 
+  strcpy(spec_memory[spec_counter], value);
+
+  int i = 0;
+  for(;strlen(rtmadapter_spec[i]) != 0;i+=2) {
+    if (strcmp(rtmadapter_spec[i], key) == 0) {
+      rtmadapter_spec[i+1] = spec_memory[spec_counter];
+      spec_counter++;
+      return true;
+    }
+  }
+  
+  strcpy(spec_memory[spec_counter+1], key);
+  rtmadapter_spec[i] = spec_memory[spec_counter+1];
+  rtmadapter_spec[i+1] = spec_memory[spec_counter];
+  rtmadapter_spec[i+2] = end_str;
+  spec_counter += 2;
+  return true;
+};
 
 void MyModuleInit(RTC::Manager* manager)
 {
@@ -89,9 +122,13 @@ Result_t Manager_init(Manager_t m, int argc, char** argv) {
   return RESULT_OK;
 }
 
+Result_t Manager_initRTMAdapter(Manager_t m) {
+  MANAGER_ARG_CHECK;
+  RTMAdapterInit(_manager);
+}
+
 Result_t Manager_setRTMAdapterModuleInitProc(Manager_t m) {
   MANAGER_ARG_CHECK;
-
   _manager->setModuleInitProc(MyModuleInit);
   return RESULT_OK;
 }
@@ -123,15 +160,15 @@ RTC_t Manager_createComponent(Manager_t m, char* identifier) {
 }
 
 RTC_t Manager_createAdapterComponent(Manager_t m) {
-	MANAGER_ARG_CHECK;
+  MANAGER_ARG_CHECK;
 
-	RTC::RtcBase* comp = _manager->createComponent("RTMAdapter");
-	if (comp == NULL) {
-		return RTC_INVALID_ID;
-	}
-	__rtcs.push_back(comp);
-	//__rtcs.push_back(std::shared_ptr<RTC::RtcBase>(comp));
-	return __rtcs.size() - 1;
+  RTC::RtcBase* comp = _manager->createComponent("RTMAdapter");
+  if (comp == NULL) {
+    return RTC_INVALID_ID;
+  }
+  __rtcs.push_back(comp);
+  //__rtcs.push_back(std::shared_ptr<RTC::RtcBase>(comp));
+  return __rtcs.size() - 1;
 }
 
 

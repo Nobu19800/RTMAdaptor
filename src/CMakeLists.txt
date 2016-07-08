@@ -1,5 +1,6 @@
-set(comp_srcs RTMAdapter.cpp manager_adapter.cpp rtc_adapter.cpp port_adapter.cpp)
+set(comp_srcs RTMAdapter.cpp manager_adapter.cpp rtc_adapter.cpp port_adapter.cpp coil_adapter.cpp)
 set(standalone_srcs RTMAdapterComp.cpp)
+set(test_srcs test.cpp)
 
 if (DEFINED OPENRTM_INCLUDE_DIRS)
   string(REGEX REPLACE "-I" ";"
@@ -43,11 +44,11 @@ set_source_files_properties(${ALL_IDL_SRCS} PROPERTIES GENERATED 1)
 add_dependencies(${PROJECT_NAME} ALL_IDL_TGT )
 target_link_libraries(${PROJECT_NAME} ${OPENRTM_LIBRARIES} )
 
-add_executable(${PROJECT_NAME}Comp ${standalone_srcs}
+add_executable(${PROJECT_NAME}Test ${test_srcs}
   ${comp_srcs} ${comp_headers} ${ALL_IDL_SRCS})
-target_link_libraries(${PROJECT_NAME}Comp ${OPENRTM_LIBRARIES} ${PROJECT_NAME}_port)
+target_link_libraries(${PROJECT_NAME}Test ${OPENRTM_LIBRARIES} ${PROJECT_NAME}_port)
 
-install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}Comp
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}Test
     EXPORT ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT component
     LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT component
