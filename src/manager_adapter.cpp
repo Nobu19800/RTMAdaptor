@@ -12,95 +12,20 @@ static RTC::Manager* _manager;
 //std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
 std::vector<RTC::RtcBase*> __rtcs;
 std::vector<std::shared_ptr<RTC::PortBase> > __ports;
+extern std::map<std::string, std::string> specMap;
 #define SPEC_MAX_STR 64
 #define SPEC_MAX_NUM 24
 static char spec_memory[SPEC_MAX_NUM][SPEC_MAX_STR];
 static int spec_counter;
 static char* end_str = "";
 extern char* rtmadapter_spec[];
+static bool set_spec(const char* key, const char* value);
 
-bool set_spec(const char* key, const char* value) {
-  if (strlen(value) >= SPEC_MAX_STR) {
-    std::cerr << "[RTMAdapter] Spec String Must Be Shorter than " << SPEC_MAX_STR << "." << std::endl;
-    return false;
-  } 
-  if (spec_counter == SPEC_MAX_NUM) {
-    std::cerr << "[RTMAdapter] Spec can not change any more." << std::endl;
-    return false;
-  }
-
-  strcpy(spec_memory[spec_counter], value);
-
-  int i = 0;
-  for(;strlen(rtmadapter_spec[i]) != 0;i+=2) {
-    if (strcmp(rtmadapter_spec[i], key) == 0) {
-      rtmadapter_spec[i+1] = spec_memory[spec_counter];
-      spec_counter++;
-      return true;
-    }
-  }
-  
-  strcpy(spec_memory[spec_counter+1], key);
-  rtmadapter_spec[i] = spec_memory[spec_counter+1];
-  rtmadapter_spec[i+1] = spec_memory[spec_counter];
-  rtmadapter_spec[i+2] = end_str;
-  spec_counter += 2;
-  return true;
-};
+void init_default_spec_map();
 
 void MyModuleInit(RTC::Manager* manager)
 {
   RTMAdapterInit(manager);
-  //  RTC::RtcBase* comp;
-
-  // Create a component
-  //comp = manager->createComponent("RTMAdapter");
-  //if (comp==NULL)
-  //{
-  //std::cerr << "Component create failed." << std::endl;
-  //abort();
-  //}
-
-  // Example
-  // The following procedure is examples how handle RT-Components.
-  // These should not be in this function.
-
-  // Get the component's object reference
-//  RTC::RTObject_var rtobj;
-//  rtobj = RTC::RTObject::_narrow(manager->getPOA()->servant_to_reference(comp));
-
-  // Get the port list of the component
-//  PortServiceList* portlist;
-//  portlist = rtobj->get_ports();
-
-  // getting port profiles
-//  std::cout << "Number of Ports: ";
-//  std::cout << portlist->length() << std::endl << std::endl; 
-//  for (CORBA::ULong i(0), n(portlist->length()); i < n; ++i)
-//  {
-//    PortService_ptr port;
-//    port = (*portlist)[i];
-//    std::cout << "Port" << i << " (name): ";
-//    std::cout << port->get_port_profile()->name << std::endl;
-//    
-//    RTC::PortInterfaceProfileList iflist;
-//    iflist = port->get_port_profile()->interfaces;
-//    std::cout << "---interfaces---" << std::endl;
-//    for (CORBA::ULong i(0), n(iflist.length()); i < n; ++i)
-//    {
-//      std::cout << "I/F name: ";
-//      std::cout << iflist[i].instance_name << std::endl;
-//      std::cout << "I/F type: ";
-//      std::cout << iflist[i].type_name << std::endl;
-//      const char* pol;
-//      pol = iflist[i].polarity == 0 ? "PROVIDED" : "REQUIRED";
-//      std::cout << "Polarity: " << pol << std::endl;
-//    }
-//    std::cout << "---properties---" << std::endl;
-//    NVUtil::dump(port->get_port_profile()->properties);
-//    std::cout << "----------------" << std::endl << std::endl;
-//  }
-
   return;
 }
 
@@ -111,6 +36,7 @@ void MyModuleInit(RTC::Manager* manager)
 }while(false)
 
 Manager_t Manager_initManager(int argc, char** argv) {
+  init_default_spec_map();
   _manager = RTC::Manager::init(argc, argv);
   return 0;
 }
@@ -201,4 +127,51 @@ Result_t Manager_getComponent(Manager_t m, char* instance_name, RTC_t* rtc) {
 		}
 	}
 	return RESULT_ERROR;
+}
+
+
+Result_t Manager_setRTMAdapterSpec(Manager_t m, const char* key, const char* value) {
+  MANAGER_ARG_CHECK;
+
+  //if (!set_spec(key, value)) {
+  //return RESULT_ERROR;
+  //}
+  specMap[key] = value;
+
+  return RESULT_OK;
+}
+/*
+static bool set_spec(const char* key, const char* value) {
+  if (strlen(value) >= SPEC_MAX_STR) {
+    std::cerr << "[RTMAdapter] Spec String Must Be Shorter than " << SPEC_MAX_STR << "." << std::endl;
+    return false;
+  } 
+  if (spec_counter == SPEC_MAX_NUM) {
+    std::cerr << "[RTMAdapter] Spec can not change any more." << std::endl;
+    return false;
+  }
+
+  strcpy(spec_memory[spec_counter], value);
+
+  int i = 0;
+  for(;strlen(rtmadapter_spec[i]) != 0;i+=2) {
+    if (strcmp(rtmadapter_spec[i], key) == 0) {
+      rtmadapter_spec[i+1] = spec_memory[spec_counter];
+      spec_counter++;
+      return true;
+    }
+  }
+  
+  strcpy(spec_memory[spec_counter+1], key);
+  rtmadapter_spec[i] = spec_memory[spec_counter+1];
+  rtmadapter_spec[i+1] = spec_memory[spec_counter];
+  rtmadapter_spec[i+2] = end_str;
+  spec_counter += 2;
+  return true;
+};
+*/
+Result_t Manager_RTMAdapter_init(Manager_t m) {
+  MANAGER_ARG_CHECK;
+  RTMAdapterInit(_manager);
+  return RESULT_OK;
 }

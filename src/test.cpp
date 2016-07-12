@@ -29,6 +29,7 @@ int on_execute(int ec_id) {
 }
 
 int SimpleRTCTest();
+int ModifiedRTCTest();
 
 int main(int argc, char** argv) {
   m = Manager_initManager(argc, argv);
@@ -50,7 +51,9 @@ int main(int argc, char** argv) {
   
   Manager_runManager(m, 1);  
   coil_usleep(1000*1000);
-  SimpleRTCTest();
+  //SimpleRTCTest();
+
+  ModifiedRTCTest();
   return 0;
 }
 
@@ -61,11 +64,40 @@ int SimpleRTCTest() {
     std::cout << " -Failure to createComponent::Manager" << std::endl;
     return -1;
   }
-  coil_usleep(10*1000*1000);
+  for(int i = 0;i < 10;i++) {
+    std::cout << i << std::endl;
+    coil_usleep(1*1000*1000);
+  }
+
   RTC_exit(rtc);
   std::cout << "- Test End." << std::endl;
   coil_usleep(1*1000*1000);
   return 0;
+}
+
+
+int ModifiedRTCTest() {
+  std::cout << "Modified RTC Test" << std::endl;
+  Manager_setRTMAdapterSpec(m, "implementation_id", "ModifiedRTC");
+  Manager_setRTMAdapterSpec(m, "type_name", "ModifiedRTC");
+  std::cout << "Modified Spec Parameters." << std::endl;
+  std::cout << "call RTMAdapter_init function." << std::endl;
+  Manager_RTMAdapter_init(m);
+  std::cout << "call okay." << std::endl;
+  if ((rtc = Manager_createComponent(m, "ModifiedRTC")) == RTC_INVALID_ID) {
+    std::cout << " -Failure to createComponent::Manager" << std::endl;
+    return -1;
+  }
+  for(int i = 0;i < 10;i++) {
+    std::cout << i << std::endl;
+    coil_usleep(1*1000*1000);
+  }
+
+  RTC_exit(rtc);
+  std::cout << "- Test End." << std::endl;
+  coil_usleep(1*1000*1000);
+  return 0;
+
 }
 
 int RTAdapterTest() {

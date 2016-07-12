@@ -170,7 +170,7 @@ extern "C"
   void RTMAdapterInit(RTC::Manager* manager)
   {
     //coil::Properties profile(rtmadapter_spec);
-    init_default_spec_map();
+    // init_default_spec_map();
     coil::Properties profile(specMap);
     manager->registerFactory(profile,
                              RTC::Create<RTMAdapter>,
