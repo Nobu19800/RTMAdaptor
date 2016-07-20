@@ -81,7 +81,7 @@ class RTMAdapter
    * 
    * 
    */
-  // virtual RTC::ReturnCode_t onFinalize();
+   virtual RTC::ReturnCode_t onFinalize();
 
   /***
    *
@@ -94,7 +94,7 @@ class RTMAdapter
    * 
    * 
    */
-  // virtual RTC::ReturnCode_t onStartup(RTC::UniqueId ec_id);
+   virtual RTC::ReturnCode_t onStartup(RTC::UniqueId ec_id);
 
   /***
    *
@@ -107,7 +107,7 @@ class RTMAdapter
    * 
    * 
    */
-  // virtual RTC::ReturnCode_t onShutdown(RTC::UniqueId ec_id);
+   virtual RTC::ReturnCode_t onShutdown(RTC::UniqueId ec_id);
 
   /***
    *
@@ -198,7 +198,7 @@ class RTMAdapter
    * 
    * 
    */
-  // virtual RTC::ReturnCode_t onStateUpdate(RTC::UniqueId ec_id);
+  virtual RTC::ReturnCode_t onStateUpdate(RTC::UniqueId ec_id);
 
   /***
    *
@@ -211,7 +211,7 @@ class RTMAdapter
    * 
    * 
    */
-  // virtual RTC::ReturnCode_t onRateChanged(RTC::UniqueId ec_id);
+   virtual RTC::ReturnCode_t onRateChanged(RTC::UniqueId ec_id);
 
 
  protected:
@@ -262,24 +262,45 @@ class RTMAdapter
   // <rtc-template block="private_operation">
   
   // </rtc-template>
-
+	 int(*on_finalize_callback)(int);
+	 int(*on_startup_callback)(int);
+	 int(*on_shutdown_callback)(int);
 	 int(*on_activated_callback)(int);
 	 int(*on_deactivated_callback)(int);
 	 int(*on_execute_callback)(int);
 	 int(*on_aborting_callback)(int);
 	 int(*on_error_callback)(int);
 	 int(*on_reset_callback)(int);
+	 int(*on_state_update_callback)(int);
+	 int(*on_rate_changed_callback)(int);
 
 	 void init_callbacks() {
+		 on_finalize_callback = do_nothing_callback;
+		 on_startup_callback = do_nothing_callback;
+		 on_shutdown_callback = do_nothing_callback;
 		 on_activated_callback = do_nothing_callback;
 		 on_deactivated_callback = do_nothing_callback;
 		 on_execute_callback = do_nothing_callback;
 		 on_aborting_callback = do_nothing_callback;
 		 on_error_callback = do_nothing_callback;
 		 on_reset_callback = do_nothing_callback;
+		 on_state_update_callback = do_nothing_callback;
+		 on_rate_changed_callback = do_nothing_callback;
 	 }
 
  public:
+	 void onFinalize_listen(int(*callback)(int)) {
+		 on_finalize_callback = callback;
+	 }
+
+	 void onStartUp_listen(int(*callback)(int)) {
+		 on_startup_callback = callback;
+	 }
+
+	 void onShutdown_listen(int(*callback)(int)) {
+		 on_shutdown_callback = callback;
+	 }
+
 	 void onActivated_listen(int(*callback)(int)) {
 		 on_activated_callback = callback;
 	 }
@@ -304,6 +325,13 @@ class RTMAdapter
 		 on_reset_callback = callback;
 	 }
 
+	 void onStateUpdate_listen(int(*callback)(int)) {
+		 on_state_update_callback = callback;
+	 }
+
+	 void onRateChanged_listen(int(*callback)(int)) {
+		 on_rate_changed_callback = callback;
+	 }
 };
 
 

@@ -1,6 +1,6 @@
 set(comp_srcs RTMAdapter.cpp manager_adapter.cpp rtc_adapter.cpp port_adapter.cpp coil_adapter.cpp)
-set(standalone_srcs RTMAdapterComp.cpp)
-set(test_srcs test.cpp)
+# set(standalone_srcs RTMAdapterComp.cpp)
+set(test_srcs test.c)
 
 if (DEFINED OPENRTM_INCLUDE_DIRS)
   string(REGEX REPLACE "-I" ";"
@@ -26,7 +26,6 @@ endif (DEFINED OPENRTM_LIBRARIES)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME})
 include_directories(${PROJECT_BINARY_DIR})
-include_directories(${PROJECT_BINARY_DIR}/idl)
 include_directories(${OPENRTM_INCLUDE_DIRS})
 include_directories(${OMNIORB_INCLUDE_DIRS})
 add_definitions(${OPENRTM_CFLAGS})
@@ -46,13 +45,13 @@ target_link_libraries(${PROJECT_NAME} ${OPENRTM_LIBRARIES} )
 
 add_executable(${PROJECT_NAME}Test ${test_srcs}
   ${comp_srcs} ${comp_headers} ${ALL_IDL_SRCS})
-target_link_libraries(${PROJECT_NAME}Test ${OPENRTM_LIBRARIES} ${PROJECT_NAME}_port)
+target_link_libraries(${PROJECT_NAME}Test ${OPENRTM_LIBRARIES})
 
-install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}Test
+install(TARGETS ${PROJECT_NAME} 
     EXPORT ${PROJECT_NAME}
-    RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT component
-    LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT component
-    ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT component)
+    RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIB_INSTALL_DIR} )
 install(EXPORT ${PROJECT_NAME}
     DESTINATION ${LIB_INSTALL_DIR}/${PROJECT_NAME}
     FILE ${PROJECT_NAME}Depends.cmake)

@@ -32,7 +32,7 @@ char* rtmadapter_spec[SPEC_MAX_NUM] =
 std::map<std::string, std::string> specMap;
 
 void init_default_spec_map() {
-  std::cout << "init_default_spec_map" << std::endl;
+  ///std::cout << "init_default_spec_map" << std::endl;
   for(int i = 0;i < SPEC_MAX_NUM;i+=2) {
     std::string key = rtmadapter_spec[i];
 
@@ -43,7 +43,7 @@ void init_default_spec_map() {
     }
 
     std::string value = rtmadapter_spec[i+1];
-    std::cout << "map[" << key << "] = " << value << std::endl;
+    //std::cout << "map[" << key << "] = " << value << std::endl;
     specMap[key] = value;
   }
 }
@@ -93,27 +93,21 @@ RTC::ReturnCode_t RTMAdapter::onInitialize()
   return RTC::RTC_OK;
 }
 
-/*
+
 RTC::ReturnCode_t RTMAdapter::onFinalize()
 {
   return RTC::RTC_OK;
 }
-*/
-
-/*
+ 
 RTC::ReturnCode_t RTMAdapter::onStartup(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
-*/
-
-/*
+ 
 RTC::ReturnCode_t RTMAdapter::onShutdown(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
-*/
-
 
 RTC::ReturnCode_t RTMAdapter::onActivated(RTC::UniqueId ec_id)
 {
@@ -148,19 +142,15 @@ RTC::ReturnCode_t RTMAdapter::onReset(RTC::UniqueId ec_id)
 	return on_reset_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
 }
 
-/*
 RTC::ReturnCode_t RTMAdapter::onStateUpdate(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
-*/
 
-/*
 RTC::ReturnCode_t RTMAdapter::onRateChanged(RTC::UniqueId ec_id)
 {
   return RTC::RTC_OK;
 }
-*/
 
 
 

@@ -77,7 +77,7 @@ Result_t RTC_exit(RTC_t rtc) {
 	return RESULT_OK;
 }
 
-Result_t RTC_onActivate_listen(RTC_t rtc, int (*callback)(int)) {
+Result_t RTC_onActivated_listen(RTC_t rtc, int (*callback)(int)) {
 	CHECK_RTC_ID(rtc);
 	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
 	//std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
@@ -87,7 +87,7 @@ Result_t RTC_onActivate_listen(RTC_t rtc, int (*callback)(int)) {
 	return RESULT_OK;
 }
 
-Result_t RTC_onDeactivate_listen(RTC_t rtc, int(*callback)(int)) {
+Result_t RTC_onDeactivated_listen(RTC_t rtc, int(*callback)(int)) {
 	CHECK_RTC_ID(rtc);
 	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
 	//std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);

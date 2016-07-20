@@ -14,9 +14,9 @@ extern "C" {
 
   ADAPTER_API Result_t RTC_exit(RTC_t rtc);
 
-  ADAPTER_API Result_t RTC_onActivate_listen(RTC_t rtc, int(*callback)(int));
+  ADAPTER_API Result_t RTC_onActivated_listen(RTC_t rtc, int(*callback)(int));
 
-  ADAPTER_API Result_t RTC_onDeactivate_listen(RTC_t rtc, int(*callback)(int));
+  ADAPTER_API Result_t RTC_onDeactivated_listen(RTC_t rtc, int(*callback)(int));
 
   ADAPTER_API Result_t RTC_onExecute_listen(RTC_t rtc, int(*callback)(int));
 

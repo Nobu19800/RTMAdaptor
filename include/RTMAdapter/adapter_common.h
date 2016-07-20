@@ -36,13 +36,13 @@ extern "C" {
   typedef int32_t DataType_t;
   static const DataType_t DATATYPE_INVALID_ID = -4;
 
-  enum Result_t {
+  typedef enum Result_t_type {
     RESULT_ERROR = -1,
 	RESULT_INVALID_RTC = -2,
 	RESULT_INVALID_PORT = -3,
 	RESULT_INVALID_DATA = -4,
 	RESULT_OK = 0,
-  };
+  } Result_t;
 
 
 
