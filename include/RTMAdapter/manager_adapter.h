@@ -29,6 +29,9 @@ extern "C" {
 
   ADAPTER_API Result_t Manager_RTMAdapter_init(Manager_t m);
 
+  ADAPTER_API Result_t Manager_setModuleInitProc(Manager_t m, void(*initRoutine)(Manager_t m));
+
+
 #ifdef __cplusplus
 }
 #endif

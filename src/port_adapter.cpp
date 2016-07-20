@@ -34,3 +34,15 @@ Result_t InPort_read(Port_t port, int32_t* result) {
 void* Port_getBuffer() {
   return (void*)(&__ports);
 }
+
+uint32_t Port_size() {
+	return __ports.size();
+}
+
+void Port_push_back(void* ptr) {
+	__ports.push_back(std::shared_ptr<RTC::PortBase>((RTC::PortBase*)ptr));
+}
+
+void* Port_get(Port_t p) {
+	return __ports[p].get();
+}

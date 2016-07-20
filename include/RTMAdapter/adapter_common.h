@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RTC_ADAPTER_COMMON_INCLUDED
+#define RTC_ADAPTER_COMMON_INCLUDED
 
 #include <stdint.h>
 
@@ -53,3 +54,5 @@ extern "C" {
 #include "rtc_adapter.h"
 #include "port_adapter.h"
 
+
+#endif

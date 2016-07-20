@@ -5,6 +5,10 @@
 #include "RTMAdapter.h"
 #include "rtc_adapter.h"
 
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 //extern std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
 extern std::vector<RTC::RtcBase* > __rtcs;
 
@@ -12,11 +16,13 @@ extern std::vector<RTC::RtcBase* > __rtcs;
 
 extern std::vector<std::shared_ptr<RTC::PortBase> > __ports;
 
-#define CHECK_PORT_ID(port) do {if(port<0 || port >=__ports.size()){return RESULT_INVALID_RTC;} }while(false)
+#define CHECK_PORT_ID(port) do {if(port < 0 || port >=__ports.size()) { return RESULT_INVALID_PORT; } }while(false)
 
 
 Result_t RTC_addInPort(RTC_t rtc, char* name, Port_t port) {
+#ifdef DEBUG
   std::cout << "RTC_addInPort(" << rtc << ", " << name << ", " << port << ")" << std::endl;
+#endif
   CHECK_RTC_ID(rtc);
   RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
   //std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
@@ -31,16 +37,20 @@ Result_t RTC_addInPort(RTC_t rtc, char* name, Port_t port) {
 }
 
 Result_t RTC_addOutPort(RTC_t rtc, char* name, Port_t port) {
+#ifdef DEBUG
+  std::cout << "RTC_addOutPort(" << rtc << ", " << name << ", " << port << ")---" << std::endl;
+#endif
   CHECK_RTC_ID(rtc);
   RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
   //std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
   if (comp == nullptr) { return RESULT_INVALID_RTC; }
   
+  std::cout << "__ports.size() = " << __ports.size() << std::endl;
   CHECK_PORT_ID(port);
   std::shared_ptr<RTC::OutPortBase> outport = std::dynamic_pointer_cast<RTC::OutPortBase>(__ports[port]);
-  if (outport == nullptr) { return RESULT_INVALID_PORT; }
-
-
+  if (outport.get() == nullptr) { return RESULT_INVALID_PORT; }
+  
+  std::cout << "addOutPort " << std::endl;
   if (comp->addOutPort(name, *outport)) return RESULT_OK;
   return RESULT_ERROR;
 }

@@ -23,12 +23,19 @@ static bool set_spec(const char* key, const char* value);
 
 void init_default_spec_map();
 
-void MyModuleInit(RTC::Manager* manager)
-{
-  RTMAdapterInit(manager);
-  return;
+void do_nothing_routine(Manager_t m) {
+
 }
 
+void* argument = NULL;
+void (*init_routine)(Manager_t m) = do_nothing_routine;
+
+void MyModuleInit(RTC::Manager* manager)
+{
+  //RTMAdapterInit(manager);
+  init_routine(0);
+  return;
+}
 
 #define MANAGER_ARG_CHECK do {if (m < 0) { \
     return RESULT_ERROR;\
@@ -51,6 +58,13 @@ Result_t Manager_init(Manager_t m, int argc, char** argv) {
 Result_t Manager_initRTMAdapter(Manager_t m) {
   MANAGER_ARG_CHECK;
   RTMAdapterInit(_manager);
+  return RESULT_OK;
+}
+
+Result_t Manager_setModuleInitProc(Manager_t m, void(*initRoutine)(Manager_t m)) {
+	init_routine = initRoutine;
+	_manager->setModuleInitProc(MyModuleInit);
+	return RESULT_OK;
 }
 
 Result_t Manager_setRTMAdapterModuleInitProc(Manager_t m) {
