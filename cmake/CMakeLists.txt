@@ -14,5 +14,8 @@ set(cmake_version_config
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake.in
     ${cmake_version_config} @ONLY)
 set(cmake_mods ${cmake_config} ${cmake_version_config})
+if(WIN32)
+install(FILES ${cmake_mods} DESTINATION ${CMAKE_INSTALL_DIR} COMPONENT library)
+else(WIN32)
 install(FILES ${cmake_mods} DESTINATION ${SHARE_INSTALL_DIR} COMPONENT library)
-
+endif(WIN32)

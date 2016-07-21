@@ -29,9 +29,27 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 
+
 # Set up installation directories
+
+if (${CMAKE_SYSTEM_NAME} MATCHES Windows)
+  if (CMAKE_CL_64)
+    set(SYSDIR $ENV{SYSTEMROOT}\\system32)
+  else (CMAKE_CL_64)
+    set(SYSDIR $ENV{SYSTEMROOT}\\syswow64)
+  endif(CMAKE_CL_64)
+else()
+
+endif()
+
+if(WIN32)
+  set (SYS_INSTALL_DIR ${SYSDIR})
+endif(WIN32)
+
+
 set(BIN_INSTALL_DIR "bin")
 set(LIB_INSTALL_DIR "lib")
+set(CMAKE_INSTALL_DIR "cmake")
 set(INC_INSTALL_DIR
     "include/${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 set(SHARE_INSTALL_DIR
