@@ -33,9 +33,9 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 set(BIN_INSTALL_DIR "bin")
 set(LIB_INSTALL_DIR "lib")
 set(INC_INSTALL_DIR
-    "include/${PROJECT_NAME_LOWER}-${PROJECT_VERSION_MAJOR} ")
+    "include/${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 set(SHARE_INSTALL_DIR
-    "share/${PROJECT_NAME_LOWER}-${PROJECT_VERSION_MAJOR} ")
+    "share/${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 
 # Get necessary dependency information
 find_package(OpenRTM)
