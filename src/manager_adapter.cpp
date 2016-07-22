@@ -32,7 +32,6 @@ void (*init_routine)(Manager_t m) = do_nothing_routine;
 
 void MyModuleInit(RTC::Manager* manager)
 {
-  //RTMAdapterInit(manager);
   init_routine(0);
   return;
 }
