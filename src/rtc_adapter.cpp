@@ -18,6 +18,7 @@ extern std::vector<std::shared_ptr<RTC::PortBase> > __ports;
 
 #define CHECK_PORT_ID(port) do {if(port < 0 || port >=__ports.size()) { return RESULT_INVALID_PORT; } }while(false)
 
+std::map<std::string, std::string> __configurations;
 
 Result_t RTC_addInPort(RTC_t rtc, char* name, Port_t port) {
 #ifdef DEBUG
@@ -134,5 +135,55 @@ Result_t RTC_onReset_listen(RTC_t rtc, int (*callback)(int)) {
 	if (comp == nullptr) { return RESULT_INVALID_RTC; }
 
 	comp->onReset_listen(callback);
+	return RESULT_OK;
+}
+
+
+Result_t RTC_bindParameter(RTC_t rtc, char* name, char* defaultValue){
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	std::string value(defaultValue);
+	__configurations[name] = value;
+	comp->bindParameter(name, __configurations[name], defaultValue);
+	return RESULT_OK;
+}
+
+Result_t RTC_updateParameters(RTC_t rtc, char* confsetName) {
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	comp->updateParameters(confsetName);
+
+	return RESULT_OK;
+}
+
+Result_t RTC_getParameterStringLength(RTC_t rtc, char* name, int32_t* size) {
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	if (__configurations.find(name) == __configurations.end()) {
+		return RESULT_ERROR;
+	}
+
+	*size = __configurations[name].length();
+
+	return RESULT_OK;
+}
+
+
+Result_t RTC_getParameter(RTC_t rtc, char* name, char* value) {
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+	if (__configurations.find(name) == __configurations.end()) {
+		return RESULT_ERROR;
+	}
+
+	strcpy(value, __configurations[name].c_str());
+
 	return RESULT_OK;
 }

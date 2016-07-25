@@ -26,6 +26,14 @@ extern "C" {
 
   ADAPTER_API Result_t RTC_onReset_listen(RTC_t rtc, int(*callback)(int));
 
+  ADAPTER_API Result_t RTC_bindParameter(RTC_t rtc, char* name, char* defaultValue);
+
+  ADAPTER_API Result_t RTC_updateParameters(RTC_t rtc, char* confsetName);
+
+  ADAPTER_API Result_t RTC_getParameterStringLength(RTC_t rtc, char* name, int32_t* size);
+
+  ADAPTER_API Result_t RTC_getParameter(RTC_t rtc, char* name, char* value);
+
 #ifdef __cplusplus
 }
 #endif
