@@ -9,6 +9,12 @@
 static RTC::Manager* _manager;
 
 
+#ifdef WIN32
+#ifdef _DEBUG
+#define DEBUG
+#endif
+#endif
+
 //std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
 std::vector<RTC::RtcBase*> __rtcs;
 std::vector<std::shared_ptr<RTC::PortBase> > __ports;
@@ -43,12 +49,24 @@ void MyModuleInit(RTC::Manager* manager)
 
 Manager_t Manager_initManager(int argc, char** argv) {
   init_default_spec_map();
+#ifdef DEBUG
+  std::cout << "Manager_initManager(" << argc << ", argv)" << std::endl;
+  for (int i = 0; i < argc; i++) {
+	  std::cout << " - argv[" << i << "] : " << argv[i] << std::endl;
+  }
+#endif
   _manager = RTC::Manager::init(argc, argv);
   return 0;
 }
 
 Result_t Manager_init(Manager_t m, int argc, char** argv) {
-  MANAGER_ARG_CHECK;
+	MANAGER_ARG_CHECK;
+#ifdef DEBUG
+	std::cout << "Manager_init(" << m << ", " << argc << ", argv)" << std::endl;
+	for (int i = 0; i < argc; i++) {
+		std::cout << " - argv[" << i << "] : " << argv[i] << std::endl;
+	}
+#endif
 
   _manager->init(argc, argv);
   return RESULT_OK;
@@ -74,13 +92,20 @@ Result_t Manager_setRTMAdapterModuleInitProc(Manager_t m) {
 
 Result_t Manager_activateManager(Manager_t m) {
   MANAGER_ARG_CHECK;
+#ifdef DEBUG
+  std::cout << "Manager_activateManager(" << m << ")" << std::endl;
+#endif
+
 
   _manager->activateManager();
   return RESULT_OK;
 }
 
 Result_t Manager_runManager(Manager_t m, int32_t flag) {
-  MANAGER_ARG_CHECK;
+	MANAGER_ARG_CHECK;
+#ifdef DEBUG
+	std::cout << "Manager_runManager(" << m << ", " << flag << ")" << std::endl;
+#endif
   
   _manager->runManager(flag == 0 ? false : true);
   return RESULT_OK;
@@ -88,6 +113,9 @@ Result_t Manager_runManager(Manager_t m, int32_t flag) {
 
 RTC_t Manager_createComponent(Manager_t m, char* identifier) {
   MANAGER_ARG_CHECK;
+#ifdef DEBUG
+  std::cout << "Manager_createComponent(" << m << ", " << identifier << ")" << std::endl;
+#endif
 
   RTC::RtcBase* comp = _manager->createComponent(identifier);
   if (comp == NULL) {
@@ -112,7 +140,10 @@ RTC_t Manager_createAdapterComponent(Manager_t m) {
 
 
 Result_t Manager_shutdown(Manager_t m) {
-  MANAGER_ARG_CHECK;
+	MANAGER_ARG_CHECK;
+#ifdef DEBUG
+	std::cout << "Manager_shutdown(" << m << ")" << std::endl;
+#endif
   //_manager->terminate();
   _manager->shutdown();
   return RESULT_OK;
@@ -120,6 +151,9 @@ Result_t Manager_shutdown(Manager_t m) {
 
 Result_t Manager_deleteComponent(Manager_t m, RTC_t rtc) {
 	MANAGER_ARG_CHECK;
+#ifdef DEBUG
+	std::cout << "Manager_deleteComponent(" << m << ", " << rtc << ")" << std::endl;
+#endif
 	if (rtc < 0 || rtc >= __rtcs.size()) {
 		return RESULT_INVALID_RTC;
 	}
@@ -146,6 +180,9 @@ Result_t Manager_getComponent(Manager_t m, char* instance_name, RTC_t* rtc) {
 Result_t Manager_setRTMAdapterSpec(Manager_t m, const char* key, const char* value) {
   MANAGER_ARG_CHECK;
 
+#ifdef DEBUG
+  std::cout << "Manager_setRTMAdapterSpec(" << m << ", " << key << ", " << value << ")" << std::endl;
+#endif
   //if (!set_spec(key, value)) {
   //return RESULT_ERROR;
   //}

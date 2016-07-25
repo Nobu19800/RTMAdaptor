@@ -10,6 +10,8 @@ extern "C" {
 
   ADAPTER_API Result_t RTC_addOutPort(RTC_t rtc, char* name, Port_t port);
 
+  ADAPTER_API Result_t RTC_addCorbaPort(RTC_t rtc, Port_t port);
+
   ADAPTER_API Result_t RTC_deletePort(RTC_t rtc, Port_t port);
 
   ADAPTER_API Result_t RTC_exit(RTC_t rtc);

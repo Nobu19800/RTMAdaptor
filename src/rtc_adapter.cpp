@@ -5,10 +5,11 @@
 #include "RTMAdapter.h"
 #include "rtc_adapter.h"
 
-#ifndef DEBUG
+#ifdef WIN32
+#ifdef _DEBUG
 #define DEBUG
 #endif
-
+#endif
 //extern std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
 extern std::vector<RTC::RtcBase* > __rtcs;
 
@@ -39,24 +40,44 @@ Result_t RTC_addInPort(RTC_t rtc, char* name, Port_t port) {
 
 Result_t RTC_addOutPort(RTC_t rtc, char* name, Port_t port) {
 #ifdef DEBUG
-  std::cout << "RTC_addOutPort(" << rtc << ", " << name << ", " << port << ")---" << std::endl;
+  std::cout << "RTC_addOutPort(" << rtc << ", " << name << ", " << port << ")" << std::endl;
 #endif
   CHECK_RTC_ID(rtc);
   RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
   //std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
   if (comp == nullptr) { return RESULT_INVALID_RTC; }
   
-  std::cout << "__ports.size() = " << __ports.size() << std::endl;
   CHECK_PORT_ID(port);
   std::shared_ptr<RTC::OutPortBase> outport = std::dynamic_pointer_cast<RTC::OutPortBase>(__ports[port]);
   if (outport.get() == nullptr) { return RESULT_INVALID_PORT; }
   
-  std::cout << "addOutPort " << std::endl;
   if (comp->addOutPort(name, *outport)) return RESULT_OK;
   return RESULT_ERROR;
 }
 
+
+Result_t RTC_addCorbaPort(RTC_t rtc, Port_t port) {
+#ifdef DEBUG
+	std::cout << "RTC_addCorbaPort(" << rtc << ", " << port << ")" << std::endl;
+#endif
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	//std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	CHECK_PORT_ID(port);
+	std::shared_ptr<RTC::CorbaPort> corbaport = std::dynamic_pointer_cast<RTC::CorbaPort>(__ports[port]);
+	if (corbaport.get() == nullptr) { return RESULT_INVALID_PORT; }
+
+	if (comp->addPort(*corbaport)) return RESULT_OK;
+	return RESULT_ERROR;
+}
+
+
 Result_t RTC_deletePort(RTC_t rtc, Port_t port) {
+#ifdef DEBUG
+	std::cout << "RTC_deletePort(" << rtc << ", " << port << ")" << std::endl;
+#endif
   CHECK_RTC_ID(rtc);
   RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
   //std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
@@ -140,6 +161,10 @@ Result_t RTC_onReset_listen(RTC_t rtc, int (*callback)(int)) {
 
 
 Result_t RTC_bindParameter(RTC_t rtc, char* name, char* defaultValue){
+#ifdef DEBUG
+	std::cout << "RTC_bindParameter(" << rtc << ", " << name << ", " << defaultValue << ")" << std::endl;
+#endif
+
 	CHECK_RTC_ID(rtc);
 	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
 	if (comp == nullptr) { return RESULT_INVALID_RTC; }
