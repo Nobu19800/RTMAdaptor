@@ -144,8 +144,19 @@ Result_t Manager_shutdown(Manager_t m) {
 #ifdef DEBUG
 	std::cout << "Manager_shutdown(" << m << ")" << std::endl;
 #endif
-  //_manager->terminate();
-  _manager->shutdown();
+  _manager->terminate();
+  __rtcs.clear();
+  return RESULT_OK;
+}
+
+
+Result_t Manager_join(Manager_t m) {
+  MANAGER_ARG_CHECK;
+#ifdef DEBUG
+  std::cout << "Manager_join(" << m << ")" << std::endl;
+#endif
+  _manager->join();
+  _manager = NULL;
   return RESULT_OK;
 }
 

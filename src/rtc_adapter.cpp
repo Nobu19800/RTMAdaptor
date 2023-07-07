@@ -159,6 +159,56 @@ Result_t RTC_onReset_listen(RTC_t rtc, int (*callback)(int)) {
 	return RESULT_OK;
 }
 
+Result_t RTC_onStartup_listen(RTC_t rtc, int (*callback)(int)) {
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	//std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	comp->onStartUp_listen(callback);
+	return RESULT_OK;
+}
+
+Result_t RTC_onFinalize_listen(RTC_t rtc, int (*callback)(int)) {
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	//std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	comp->onFinalize_listen(callback);
+	return RESULT_OK;
+}
+
+Result_t RTC_onShutdown_listen(RTC_t rtc, int (*callback)(int)) {
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	//std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	comp->onShutdown_listen(callback);
+	return RESULT_OK;
+}
+
+Result_t RTC_onStateUpdate_listen(RTC_t rtc, int (*callback)(int)) {
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	//std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	comp->onStateUpdate_listen(callback);
+	return RESULT_OK;
+}
+
+Result_t RTC_onRateChanged_listen(RTC_t rtc, int (*callback)(int)) {
+	CHECK_RTC_ID(rtc);
+	RTMAdapter* comp = dynamic_cast<RTMAdapter*>(__rtcs[rtc]);
+	//std::shared_ptr<RTMAdapter> comp = std::dynamic_pointer_cast<RTMAdapter>(__rtcs[rtc]);
+	if (comp == nullptr) { return RESULT_INVALID_RTC; }
+
+	comp->onRateChanged_listen(callback);
+	return RESULT_OK;
+}
+
 
 Result_t RTC_bindParameter(RTC_t rtc, char* name, char* defaultValue){
 #ifdef DEBUG

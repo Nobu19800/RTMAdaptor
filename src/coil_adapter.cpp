@@ -1,7 +1,8 @@
 
 #include "coil_adapter.h"
-#include <coil/Time.h>
+#include <thread>
+#include <chrono>
 
 void coil_usleep(const uint64_t usec) {
-  coil::usleep(usec);
+  std::this_thread::sleep_for(std::chrono::nanoseconds(usec));
 }
