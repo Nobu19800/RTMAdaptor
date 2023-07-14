@@ -17,7 +17,7 @@ static RTC::Manager* _manager;
 
 //std::vector<std::shared_ptr<RTC::RtcBase> > __rtcs;
 std::vector<RTC::RtcBase*> __rtcs;
-std::vector<std::shared_ptr<RTC::PortBase> > __ports;
+std::vector<RTC::PortBase*> __ports;
 extern std::map<std::string, std::string> specMap;
 #define SPEC_MAX_STR 64
 #define SPEC_MAX_NUM 24
