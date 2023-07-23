@@ -2,11 +2,12 @@
 #include <memory>
 
 #include <rtm/Manager.h>
+#include <rtm/CORBA_RTCUtil.h>
 #include "manager_adapter.h"
 #include "RTMAdapter.h"
 
 #define MAX_MANAGER 1
-static RTC::Manager* _manager;
+static RTC::Manager* _manager = nullptr;
 
 
 #ifdef WIN32
@@ -160,6 +161,41 @@ Result_t Manager_join(Manager_t m) {
   return RESULT_OK;
 }
 
+
+
+Result_t Manager_ActivateComponent(Manager_t m, char* identifier, int ec_id) {
+  MANAGER_ARG_CHECK;
+#ifdef DEBUG
+  std::cout << "Manager_join(" << m << ")" << std::endl;
+#endif
+  CORBA_RTCUtil::
+    _manager->join();
+  _manager = NULL;
+  return RESULT_OK;
+}
+
+Result_t Manager_DeactivateComponent(Manager_t m, char* identifier, int ec_id) {
+  MANAGER_ARG_CHECK;
+#ifdef DEBUG
+  std::cout << "Manager_join(" << m << ")" << std::endl;
+#endif
+  CORBA_RTCUtil::
+    _manager->join();
+  _manager = NULL;
+  return RESULT_OK;
+}
+
+Result_t Manager_ResetComponent(Manager_t m, char* identifier, int ec_id) {
+  MANAGER_ARG_CHECK;
+#ifdef DEBUG
+  std::cout << "Manager_join(" << m << ")" << std::endl;
+#endif
+  CORBA_RTCUtil::
+    _manager->join();
+  _manager = NULL;
+  return RESULT_OK;
+}
+
 Result_t Manager_deleteComponent(Manager_t m, RTC_t rtc) {
 	MANAGER_ARG_CHECK;
 #ifdef DEBUG
@@ -235,4 +271,15 @@ Result_t Manager_RTMAdapter_init(Manager_t m) {
   MANAGER_ARG_CHECK;
   RTMAdapterInit(_manager);
   return RESULT_OK;
+}
+
+Manager_t Manager_startManager(int argc, char** argv, void(*initRoutine)(Manager_t m), int32_t flag) {
+  if (_manager == nullptr)
+  {
+    Manager_t m = Manager_initManager(argc, argv);
+    Manager_setModuleInitProc(m, initRoutine);
+    Manager_activateManager(m);
+    Manager_runManager(m, flag);
+  }
+  return 0;
 }

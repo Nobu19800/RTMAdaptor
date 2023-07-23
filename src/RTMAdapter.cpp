@@ -54,7 +54,8 @@ void init_default_spec_map() {
  */
 RTMAdapter::RTMAdapter(RTC::Manager* manager)
     // <rtc-template block="initializer">
-  : RTC::DataFlowComponentBase(manager)
+  : RTC::DataFlowComponentBase(manager),
+  m_id(0)
 
     // </rtc-template>
 {
@@ -96,60 +97,71 @@ RTC::ReturnCode_t RTMAdapter::onInitialize()
 
 RTC::ReturnCode_t RTMAdapter::onFinalize()
 {
-  return RTC::RTC_OK;
+  RTC::ReturnCode_t ret = on_finalize_callback_g(m_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_finalize_callback() == 0 ? ret : RTC::RTC_ERROR;
 }
  
 RTC::ReturnCode_t RTMAdapter::onStartup(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+  RTC::ReturnCode_t ret = on_startup_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_startup_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
  
 RTC::ReturnCode_t RTMAdapter::onShutdown(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+  RTC::ReturnCode_t ret = on_shutdown_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_shutdown_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 RTC::ReturnCode_t RTMAdapter::onActivated(RTC::UniqueId ec_id)
 {
-	return on_activated_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  RTC::ReturnCode_t ret = on_activated_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+	return on_activated_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 
 RTC::ReturnCode_t RTMAdapter::onDeactivated(RTC::UniqueId ec_id)
 {
-	return on_deactivated_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  RTC::ReturnCode_t ret = on_deactivated_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_deactivated_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 
 RTC::ReturnCode_t RTMAdapter::onExecute(RTC::UniqueId ec_id)
 {
-	return on_execute_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  RTC::ReturnCode_t ret = on_execute_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_execute_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 
 RTC::ReturnCode_t RTMAdapter::onAborting(RTC::UniqueId ec_id)
 {
-	return on_aborting_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  RTC::ReturnCode_t ret = on_aborting_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_aborting_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 RTC::ReturnCode_t RTMAdapter::onError(RTC::UniqueId ec_id)
 {
-	return on_error_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  RTC::ReturnCode_t ret = on_error_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_error_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 RTC::ReturnCode_t RTMAdapter::onReset(RTC::UniqueId ec_id)
 {
-	return on_reset_callback(ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  RTC::ReturnCode_t ret = on_reset_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_reset_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 RTC::ReturnCode_t RTMAdapter::onStateUpdate(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+  RTC::ReturnCode_t ret = on_state_update_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_state_update_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 RTC::ReturnCode_t RTMAdapter::onRateChanged(RTC::UniqueId ec_id)
 {
-  return RTC::RTC_OK;
+  RTC::ReturnCode_t ret = on_rate_changed_callback_g(m_id, ec_id) == 0 ? RTC::RTC_OK : RTC::RTC_ERROR;
+  return on_rate_changed_callback(ec_id) == 0 ? ret : RTC::RTC_ERROR;
 }
 
 
@@ -169,7 +181,18 @@ extern "C"
   
 };
 
+int do_nothing_void_callback() {
+  return 0;
+}
+
 int do_nothing_callback(int id) {
 	return 0;
 }
 
+int do_nothing_void_callback_g(int r) {
+  return 0;
+}
+
+int do_nothing_callback_g(int r, int id) {
+  return 0;
+}
